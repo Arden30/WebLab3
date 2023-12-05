@@ -59,6 +59,11 @@ function graph(e) {
     R = document.getElementById("coordinates-form:r_input").value;
     R = R.replace(",", ".");
 
+    if (isNaN(R)) {
+        alert("Input correct R-value (double number in [1;4]!)");
+        return;
+    }
+    
     let svgSize = 410;
 
     const position = $('svg').offset();
@@ -87,12 +92,15 @@ function drawDots() {
 
     const graph = $("#coordinates svg");
     const existingContent = graph.html();
-    const contentToInsert = `<circle class="dot" 
+
+    if (!isNaN(coordinateX) && !isNaN(coordinateY)) {
+        const contentToInsert = `<circle class="dot" 
                                  r="3" 
                                  cx="${coordinateX}"
                                  cy="${coordinateY}"
                                  fill="${color}"/>`;
-    graph.html(existingContent + contentToInsert);
+        graph.html(existingContent + contentToInsert);
+    }
 }
 
 function getX() {
