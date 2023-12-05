@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>WebLab3</title>
+    <h:outputStylesheet library="css" name="main.css"/>
+    <link rel="shortcut icon" href="resources/img/30.jpg"/>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</h:head>
+
+<h:body>
+<div class="container">
+
+    <div class="header">
+        <h1>Arsenev Denis, P3214</h1>
+        <h2>Variant: 2465</h2>
+    </div>
+
+    <div class="page-button">
+        <h:button outcome="index" value="Back"/>
+    </div>
+
+    <h:form id="hiddenForm" style="display: none">
+        <h:inputText styleClass="X" value="#{dataBean.dataFromGraph.x}" />
+        <h:inputText styleClass="Y" value="#{dataBean.dataFromGraph.y}" />
+        <h:inputText styleClass="R" value="#{dataBean.dataFromGraph.r}" />
+        <h:commandButton styleClass="submitGraph" action="#{dataBean.addFromGraph}">
+            <f:ajax execute="@form" render="table-header"/>
+        </h:commandButton>
+    </h:form>
+
+    <div class="main-panel">
+        <div class="input">
+            <h1>Input correct data in form!</h1>
+            <h:form id="coordinates-form">
+                <div class="values">
+                    <div class="X-val">
+                        <label>X:  </label>
+                        <p:selectBooleanCheckbox value="#{dataBean.xValue.boolXMinus2}" itemValue="-2" itemLabel="-2"/>
+                        <p:selectBooleanCheckbox value="#{dataBean.xValue.boolXMinus15}" itemValue="-1.5" itemLabel="-1.5" />
+                        <p:selectBooleanCheckbox value="#{dataBean.xValue.boolXMinus1}" itemValue="-1" itemLabel="-1" />
+                    </div>
+                    <div class="X-val">
+                        <p:selectBooleanCheckbox value="#{dataBean.xValue.boolXMinus05}" itemValue="-0.5" itemLabel="-0.5" />
+                        <p:selectBooleanCheckbox value="#{dataBean.xValue.boolX0}" itemValue="0" itemLabel="0" />
+                        <p:selectBooleanCheckbox value="#{dataBean.xValue.boolX05}" itemValue="0.5" itemLabel="0.5" />
+                    </div>
+                    <div class="X-val">
+                        <p:selectBooleanCheckbox value="#{dataBean.xValue.boolX1}" itemValue="1" itemLabel="1" />
+                        <p:selectBooleanCheckbox value="#{dataBean.xValue.boolX15}" itemValue="1.5" itemLabel="1.5" />
+                        <p:selectBooleanCheckbox value="#{dataBean.xValue.boolX2}" itemValue="2" itemLabel="2"/>
+                    </div>
+                    <h:outputText value="#{dataBean.xValidation}" class="error"/>
+                    <div class="Y-val">
+                        <label>Y:</label>
+                        <h:inputText id="y" name="y" value="#{dataBean.dataFromForm.y}"
+                                     required="true" requiredMessage="Y is undefined!"
+                                     converterMessage="Y must be a number in (-3;5)!"
+                                     maxlength="13" a:placeholder="(-3; 5)" validator="#{dataBean.validateY}">
+                            <f:ajax execute="y" />
+                        </h:inputText>
+                        <br><h:message for="y" class="error"/></br>
+                    </div>
+                    <div class="R-val">
+                        <label>R:  </label>
+                        <p:spinner id="r" name="r"
+                                  min="1" max="4" value="#{dataBean.dataFromForm.r}" stepFactor="0.25"
+                                   validator="#{dataBean.validateR}" required="true" requiredMessage="R is undefined!"
+                                   onchange="newR()">
+                            <f:ajax execute="r" />
+                        </p:spinner>
+                        <br><h:message for="r" class="error"/></br>
+                    </div>
+                    <h:commandButton id="submit-button"
+                                     disabled="false"
+                                     type="submit"
+                                     action="#{dataBean.addFromForm}"
+                                     value="Send"
+                                     onclick="drawDotsFromForm()">
+                        <f:ajax execute="@form" render="@form table-header"/>
+                    </h:commandButton>
+                </div>
+            </h:form>
+        </div>
+
+        <div id="coordinates">
+            <svg height="450" width="450" xmlns="http://www.w3.org/2000/svg">
+                <!-- X -->
+                <line stroke="black" x1="0" x2="450" y1="225" y2="225"/>
+                <!-- Стрелка X -->
+                <polygon fill="black" points="450,225 440,230 440,220" stroke="black"/>
+
+                <!-- Y -->
+                <line stroke="black" x1="225" x2="225" y1="0" y2="450"/>
+                <!-- Стрелка Y -->
+                <polygon fill="black" points="225,0 220,10 230,10" stroke="black"/>
+
+                <!-- Справа по Х -->
+                <line stroke="black" x1="300" x2="300" y1="235" y2="215"/>
+                <line stroke="black" x1="375" x2="375" y1="235" y2="215"/>
+
+                <!-- Слева по Х -->
+                <line stroke="black" x1="150" x2="150" y1="235" y2="215"/>
+                <line stroke="black" x1="75" x2="75" y1="235" y2="215"/>
+
+                <!-- Снизу по Y -->
+                <line stroke="black" x1="215" x2="235" y1="300" y2="300"/>
+                <line stroke="black" x1="215" x2="235" y1="375" y2="375"/>
+
+                <!-- Сверху по Y -->
+                <line stroke="black" x1="215" x2="235" y1="150" y2="150"/>
+                <line stroke="black" x1="215" x2="235" y1="75" y2="75"/>
+
+                <!-- Подписи к делениям и осям -->
+                <text fill="black" x="230" y="245">0</text>
+                <!-- Справа по Х -->
+                <text id="r1" fill="black" x="300" y="255">R/2</text>
+                <text id="r2" fill="black" x="375" y="255">R</text>
+
+                <!-- Слева по Х -->
+                <text id="r3" fill="black" x="150" y="255">-R/2</text>
+                <text id="r4" fill="black" x="75" y="255">-R</text>
+
+                <!-- Сверху по Y -->
+                <text id="r5" fill="black" x="240" y="150">R/2</text>
+                <text id="r6" fill="black" x="240" y="75">R</text>
+
+                <!-- Снизу по Y -->
+                <text id="r7" fill="black" x="240" y="300">-R/2</text>
+                <text id="r8" fill="black" x="240" y="375">-R</text>
+
+                <!-- Ось Х -->
+                <text fill="black" x="430" y="215">X</text>
+                <!-- Ось Y -->
+                <text fill="black" x="230" y="15">Y</text>
+
+                <!-- Прямоугольник (1 четверть) -->
+                <polygon fill="blue"
+                         fill-opacity="0.2"
+                         stroke="blue"
+                         points="225,225 300,225 300,75 225,75"/>
+
+                <!-- Треугольник (2 четверть) -->
+                <polygon fill="blue"
+                         fill-opacity="0.2"
+                         stroke="blue"
+                         points="75,225 225,225 225,75"/>
+
+                <!-- Четверть окружности (3 четверть) -->
+                <path fill="blue"
+                      fill-opacity="0.2"
+                      stroke="blue"
+                      d = "M 225 225 L 75 225 A 150,150 0 0,0 225,375 Z"/>
+            </svg>
+        </div>
+        <h1>Try to click on graph!</h1>
+    </div>
+</div>
+
+<div class="table" id="table">
+    <h:dataTable id="table-header" styleClass="table-header" value="#{dataBean.data}" var="val">
+        <h:column>
+            <f:facet name="header">X</f:facet>
+            #{val.x}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Y</f:facet>
+            #{val.y}
+        </h:column>
+        <h:column>
+            <f:facet name="header">R</f:facet>
+            #{val.r}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Current time</f:facet>
+            #{val.currentTime}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Running time</f:facet>
+            #{val.runningTime} ns
+        </h:column>
+        <h:column>
+            <f:facet name="header">Result</f:facet>
+            #{val.result ? "Hit": "Miss"}
+        </h:column>
+    </h:dataTable>
+    <h:commandButton id="clear-button"
+                     disabled="false"
+                     type="submit"
+                     action="#{dataBean.clearTable}"
+                     value="Clear"
+                     onclick="deleteDots()">
+        <f:ajax render="table-header"/>
+    </h:commandButton>
+</div>
+
+<div class="footer">
+    <h2>Web-programming. Laboratory work #3. 2023</h2>
+</div>
+
+<ui:insert name="scripts">
+    <h:outputScript library="js" name="main.js"/>
+</ui:insert>
+
+</h:body>
+</html>

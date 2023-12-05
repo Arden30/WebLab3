@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+    <title>WebLab3</title>
+    <link rel="shortcut icon" href="resources/img/30.jpg"/>
+    <h:outputStylesheet library="css" name="start.css"/>
+</h:head>
+
+<h:body>
+    <div class="container">
+        <div class="header">
+            <h1>Arsenev Denis, P3214</h1>
+            <h2>Variant: 2465</h2>
+        </div>
+    </div>
+
+    <div id="clock">
+        <div id="date"></div>
+        <div id="time"></div>
+    </div>
+
+    <div class="page-button">
+        <h:button outcome="main" value="Go to the main page"/>
+    </div>
+
+    <div class="footer">
+        <h2>Web-programming. Laboratory work #3. 2023</h2>
+    </div>
+
+    <ui:insert name="scripts">
+        <h:outputScript library="js" name="clock.js"/>
+    </ui:insert>
+</h:body>
+</html>
