@@ -75,7 +75,7 @@
                         <p:spinner id="r" name="r"
                                   min="1" max="4" value="#{dataBean.dataFromForm.r}" stepFactor="0.25"
                                    validator="#{dataBean.validateR}" required="true" requiredMessage="R is undefined!"
-                                   onchange="newR()">
+                                   converterMessage="R must be a number in [1;4]!" onchange="newR()">
                             <f:ajax execute="r" />
                         </p:spinner>
                         <br><h:message for="r" class="error"/></br>
