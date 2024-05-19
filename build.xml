@@ -64,6 +64,7 @@
         <classpath refid="classpath"/>
     </taskdef>
 
+    <!--git test-->
     <target name="history" description="loads previous version from git repository if compilation fails">
         <trycatch>
             <try>
