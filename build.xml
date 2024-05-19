@@ -90,7 +90,6 @@
                 <arg value="--pretty=oneline"/>
                 <arg value="--reverse"/>
             </exec>
-            <property name="first_commit"/>
             <propertyregex property="first_commit" input="${reverse_commits}" regexp="(\w+)" select="\1"/>
             <if>
                 <not>
