@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="WebLab3" default="build" basedir=".">
-    <property name="src" value="./src"/>
-    <property name="compile" value="./compile"/>
-    <property name="build" value="./build"/>
-    <property name="main-class" value="models.DataBean"/>
-    <property name="test" value="src/test/java"/>
+    <property file="build.properties"/>
 
     <path id="classpath">
         <fileset dir="${user.home}/.m2/repository/" includes="**/*.jar"/>
@@ -12,8 +8,8 @@
 
     <target name="compile" description="Project compiling">
         <echo>Compilation process is running</echo>
-        <mkdir dir="compile"/>
-        <javac includeantruntime="true" srcdir="${src}" destdir="${compile}">
+        <mkdir dir="${compile.dir}"/>
+        <javac includeantruntime="true" srcdir="${src.dir}" destdir="${compile.dir}">
             <classpath refid="classpath"/>
         </javac>
         <echo>Successfully compiled!</echo>
@@ -21,12 +17,12 @@
 
     <target name="build" description="Project building as jar-file" depends="compile">
         <echo>Building jar process is running</echo>
-        <mkdir dir="build"/>
-        <jar basedir="${compile}" destfile="${build}/${ant.project.name}.jar">
+        <mkdir dir="${build.dir}"/>
+        <jar basedir="${compile.dir}" destfile="${build.dir}/${ant.project.name}.jar">
             <manifest>
-                <attribute name="Created-By" value="arden"/>
-                <attribute name="Manifest-Version" value="1.0"/>
-                <attribute name="Main-Class" value="${main-class}"/>
+                <attribute name="Created-By" value="${project.auth}"/>
+                <attribute name="Manifest-Version" value="${project.ver}"/>
+                <attribute name="Main-Class" value="${main.class}"/>
             </manifest>
         </jar>
         <echo>Successfully built!</echo>
@@ -34,8 +30,8 @@
 
     <target name="clean" description="Deleting compiled project classes and all temporary files">
         <echo>Cleaning is running</echo>
-        <delete dir="${compile}"/>
-        <delete dir="${build}"/>
+        <delete dir="${compile.dir}"/>
+        <delete dir="${build.dir}"/>
         <echo>Cleaning completed successfully!</echo>
     </target>
 
@@ -44,9 +40,9 @@
         <junit printsummary="true" haltonfailure="yes">
             <classpath>
                 <path refid="classpath"/>
-                <pathelement location="${compile}"/>
+                <pathelement location="${compile.dir}"/>
             </classpath>
-            <test name="AreaCheckerTest"/>
+            <test name="${test.class}"/>
             <formatter type="plain" usefile="false"/>
         </junit>
         <echo>Tests were successfully completed!</echo>
@@ -64,7 +60,6 @@
         <classpath refid="classpath"/>
     </taskdef>
 
-    <!--git test-->
     <target name="history" description="loads previous version from git repository if compilation fails">
         <trycatch>
             <try>
