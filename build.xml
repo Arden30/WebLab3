@@ -32,6 +32,7 @@
         <echo>Cleaning is running</echo>
         <delete dir="${compile.dir}"/>
         <delete dir="${build.dir}"/>
+        <delete file="${diff.file}"/>
         <echo>Cleaning completed successfully!</echo>
     </target>
 
