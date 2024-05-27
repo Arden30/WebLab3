@@ -1,25 +1,31 @@
 package models;
 
 import db.HibernateManager;
+import mbeans.AreaMBean;
+import mbeans.DotsMBean;
 import utils.AreaChecker;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
+import javax.inject.Inject;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class DataBean implements Serializable {
-    private HibernateManager hibernateManager = new HibernateManager();;
+    private HibernateManager hibernateManager = new HibernateManager();
     private List<DataEntity> data;
     private DataEntity dataFromForm = new DataEntity();
     private DataEntity dataFromGraph = new DataEntity();
     private XValue xValue = new XValue();
     private String xValidation;
-
+    @Inject
+    private DotsMBean dotsMBean;
+    @Inject
+    private AreaMBean areaMBean;
     public DataBean() {
         data = hibernateManager.getAllFromDB();
         xValue.setAllX();
@@ -34,7 +40,7 @@ public class DataBean implements Serializable {
             xValidation = "";
         }
 
-        for (Double x: xValues) {
+        for (Double x : xValues) {
             DataEntity dataEntity = new DataEntity();
             setTimesAndDate(dataEntity);
 
@@ -47,6 +53,9 @@ public class DataBean implements Serializable {
                 data.add(dataEntity);
             }
         }
+
+        dotsMBean.check();
+        areaMBean.computeArea(dataFromForm.getR());
     }
 
     public void addFromGraph() {
@@ -61,6 +70,9 @@ public class DataBean implements Serializable {
         if (hibernateManager.addToDB(dataEntity)) {
             data.add(dataEntity);
         }
+
+        dotsMBean.check();
+        areaMBean.computeArea(dataFromGraph.getR());
     }
 
     public void setTimesAndDate(DataEntity dataEntity) {
@@ -72,9 +84,12 @@ public class DataBean implements Serializable {
         long runningTime = System.nanoTime() - startTime;
         dataEntity.setRunningTime(runningTime);
     }
+
     public void clearTable() {
         if (hibernateManager.clear()) {
             data.clear();
+            dotsMBean.check();
+            areaMBean.computeArea(1);
         }
     }
 
